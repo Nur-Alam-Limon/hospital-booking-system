@@ -161,15 +161,60 @@ Create a hospital with services provided
 
 ---
 
-## Decisions
+## Decisions & Highlights
+This project was designed to simulate a real-world hospital booking system, focusing on maintainability, clean architecture, and modern development practices.
 
-- Used **Prisma** for faster dev workflow, type safety, and modern ORM patterns.
-- JWT decoding was shifted to **backend** for better security and to avoid exposing token structure on the client.
-- Used **Expo SecureStore** to safely store JWTs on device.
-- Used refresh token with jwt to make more secure
-- Backend and database run in Docker for consistent development environments.
+Backend Architecture (Primary Focus)
+
+Structured REST API using Express.js, following separation of concerns (routes, controllers, middlewares, services).
+
+Authentication & Authorization:
+
+- Implemented JWT-based authentication with secure access and refresh token flow.
+- Stored JWT tokens in HTTP-only cookies to prevent XSS attacks.
+- Added middleware for protected routes (/bookings, /hospitals/create) to validate user sessions.
+- Role-based access & validation logic kept modular and reusable.
+- Error handling middleware and express-validator used to keep request validation centralized and scalable.
+
+Thoughtful Choices
+
+- Used Prisma ORM for type-safe, modern database querying and fast iteration.
+- Chose PostgreSQL, a robust relational DB, and containerized it using Docker Compose for easy setup and consistent environments.
+- Handled environment-specific configuration with .env and dotenv, making it easy to scale or deploy.
+- Built APIs assuming real-world scenarios, e.g., separating token issuance, refresh logic, and cookie transport for security best practices.
+- Added Docker support for both backend and database, which simplifies testing and onboarding.
+
+Testing & Security
+
+- Used cookie-based auth over local storage in mobile app to reduce exposure to token theft.
+- Included refresh token endpoint to demonstrate long-term auth handling with JWT.
+- Modular route protection makes it easy to add role-based access in the future.
+
+Frontend Summary 
+
+- Kept the frontend simple, clean, and mobile-first using React Native + Expo.
+- Implemented secure token handling via SecureStore and passed JWT as cookies for API auth.
+- Followed consistent file structure with reusable API utility (Axios).
 
 ---
+
+## Screenshots
+
+### Mobile App - Login
+![Login Screen](./frontend/assets/login.jpg)
+
+### Mobile App - Home 
+![Home Screen](./frontend/assets/home.jpg)
+
+### Mobile App - See Bookings
+![Bookings](./frontend/assets/bookings.jpg)
+
+### Mobile App - Book
+![Create Booking](./frontend/assets/book.jpg)
+
+### Mobile App - Create Hospital
+![Create Hospital](./frontend/assets/createHospital.jpg)
+
 
 ## GitHub
 

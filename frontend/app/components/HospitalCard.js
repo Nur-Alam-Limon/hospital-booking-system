@@ -6,6 +6,16 @@ export default function HospitalCard({ hospital, onPress }) {
     <View style={styles.card}>
       <Text style={styles.name}>{hospital.name}</Text>
 
+      {hospital.services?.length > 0 && (
+        <View style={styles.serviceContainer}>
+          {hospital.services.map((service, index) => (
+            <Text key={index} style={styles.serviceText}>
+              • {service}
+            </Text>
+          ))}
+        </View>
+      )}
+
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>Book Service</Text>
       </TouchableOpacity>
@@ -28,7 +38,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: '#1f2937',
-    marginBottom: 6,
   },
   location: {
     fontSize: 14,
@@ -46,4 +55,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  serviceContainer: {
+    marginVertical: 8,
+    padding: 10,
+  },
+  serviceText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  
 });
