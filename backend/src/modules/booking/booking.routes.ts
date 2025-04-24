@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { getHospitals, createBooking, createHospital } from "./booking.controller";
+import { createBooking, getBookings } from "./booking.controller";
 
 const router = Router();
 
-router.get("/hospitals", getHospitals);
-router.post("/create-hospital", createHospital);
+router.get("/", getBookings);
 router.post("/", createBooking);
 
 export default router;

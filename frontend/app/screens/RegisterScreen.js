@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import API from '../services/api';
 import { saveToken } from '../utils/auth';
+import { AuthContext } from '../utils/AuthContext';
 
 export default function RegisterScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const onSubmit = async data => {
     try {
       const res = await API.post('/auth/register', data);
       await saveToken(res.data.accessToken);
-      navigation.replace('HomeScreen');
+      setIsAuthenticated(true);
     } catch (err) {
       Alert.alert('Registration Failed', 'Please check your input or try again later.');
     }

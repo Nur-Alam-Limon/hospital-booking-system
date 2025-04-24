@@ -44,31 +44,27 @@ export const createBooking = async (req: Request, res: Response) => {
   }
 };
 
-
-export const getHospitals = async (_req: Request, res: Response) => {
-  const hospitals = await prisma.hospital.findMany();
-  res.json(hospitals);
-};
-
-// Create a new hospital
-export const createHospital = async (req: Request, res: Response) => {
-  const { name, services } = req.body;
-
-  // Validate if services are an array
-  if (!Array.isArray(services)) {
-    res.status(400).json({ message: "Services must be an array" });
-    return;
-  }
-
+export const getBookings = async (req: Request, res: Response) => {
   try {
-    const newHospital = await prisma.hospital.create({
-      data: {
-        name,
-        services,
-      },
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      res.status(403).json({ message: 'No token provided' });
+      return;
+    }
+
+    const decoded = jwt.verify(token, SECRET_KEY) as { userId: string };
+    const userId = decoded.userId;
+
+    const bookings = await prisma.booking.findMany({
+      where: { userId },
+      include: { hospital: true },
+      orderBy: { date: 'desc' },
     });
-    res.status(201).json({ message: "Hospital created successfully", newHospital });
-  } catch (error) {
-    res.status(500).json({ message: "Error creating hospital", error });
+
+    res.json(bookings);
+  } catch (err) {
+    console.error('Error fetching bookings:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+

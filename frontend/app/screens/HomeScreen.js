@@ -17,7 +17,7 @@ export default function HomeScreen({ navigation }) {
 
   const fetchHospitals = async () => {
     try {
-      const res = await API.get('/bookings/hospitals');
+      const res = await API.get('/hospitals');
       setHospitals(res.data);
     } catch (error) {
       console.error('Fetch error:', error);
