@@ -26,10 +26,16 @@ export const register = async (req: Request, res: Response) => {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
 
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   res.json({
     message: "User registered successfully",
     accessToken,
-    refreshToken
   });
 };
 
@@ -53,26 +59,36 @@ export const login = async (req: Request, res: Response) => {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
 
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   res.json({
     message: "Login successful",
     accessToken,
-    refreshToken
   });
 };
 
 export const refreshToken = async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
-
-  // Verify refresh token
-  const decoded = verifyToken(refreshToken);
-  if (!decoded) {
-    res.status(403).json({ message: "Invalid refresh token" });
+  const token = req.cookies.refreshToken;
+  if (!token) {
+    res.status(401).json({ message: "No refresh token" });
+    return;
   }
 
-  // Generate new access token
+  const decoded = verifyToken(token);
+  if (!decoded) {
+    res.status(403).json({ message: "Invalid refresh token" });
+    return;
+  }
+
   const newAccessToken = generateAccessToken((decoded as any).userId);
 
   res.json({
-    accessToken: newAccessToken
+    accessToken: newAccessToken,
   });
 };
+

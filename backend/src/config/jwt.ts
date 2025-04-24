@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const JWT_SECRET = 'jwtsecretcodegoeshere1234';
-const JWT_EXPIRATION = '1h';
-const JWT_REFRESH_EXPIRATION = '30d';
+const JWT_EXPIRATION = '15m';
+const JWT_REFRESH_EXPIRATION = '10d';
 
 
 export const generateAccessToken = (userId: string) => {
