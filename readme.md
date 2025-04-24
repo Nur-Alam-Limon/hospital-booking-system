@@ -22,6 +22,7 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 - **API Endpoint to Create Booking**
 - **Authorization Middleware**
 - **Validation & Error Handling**
+- **Dockerized PostgreSQL setup**
 
 ---
 
@@ -41,6 +42,7 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 - `bcryptjs` for password hashing
 - `jsonwebtoken` for user authentication
 - `dotenv` for config management
+- `Docker` for containerized PostgreSQL
 
 ---
 
@@ -60,22 +62,27 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 
 3. Create `.env`:
    ```
-   DATABASE_URL=postgresql://user:password@localhost:5432/hospitaldb
+   DATABASE_URL=postgresql://user:password@db:5432/hospitaldb
    JWT_SECRET=your_jwt_secret
    PORT=5000
    JWT_EXPIRATION=1h
    JWT_REFRESH_EXPIRATION=10d
    ```
 
-5. Run migrations and seed data:
+4. Run migrations and seed data:
    ```bash
    npx prisma migrate dev --name init
    npx prisma generate
    ```
 
-6. Start the server:
+5. Start the server:
    ```bash
    npm run dev
+   ```
+
+6. Run in docker:
+   ```bash
+   docker compose up --build
    ```
 
 ---
