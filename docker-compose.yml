@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: hospital-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "19000:19000"   # Expo DevTools
+      - "19001:19001"   # iOS (default)
+      - "19002:19002"   # Web preview
+      - "8081:8081"     # Metro bundler
+      - "8082:8082"     # Optional fallback
+    stdin_open: true
+    tty: true
+    command: ["npx", "expo", "start", "--tunnel", "--clear"]
+
+  backend:
+    build:
+      context: ./backend
+    container_name: hospital-backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/hospitaldb
+      JWT_SECRET: your_jwt_secret
+    volumes:
+      - ./backend:/app
+    ports:
+      - "5002:5000"
+    command: npm run dev
+
+  db:
+    image: postgres:14
+    container_name: hospital-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hospitaldb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+volumes:
+  pgdata:

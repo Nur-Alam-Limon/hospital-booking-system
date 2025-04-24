@@ -5,7 +5,6 @@ export default function HospitalCard({ hospital, onPress }) {
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{hospital.name}</Text>
-      <Text style={styles.location}>{hospital.location || 'Location not available'}</Text>
 
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>Book Service</Text>

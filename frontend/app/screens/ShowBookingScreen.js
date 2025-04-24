@@ -39,7 +39,6 @@ export default function ShowBookingsScreen() {
     <View style={styles.card}>
       <Text style={styles.hospital}>{item.hospital.name}</Text>
       <Text style={styles.service}>Service: {item.service}</Text>
-      <Text style={styles.date}>Booked On: {new Date(item.createdAt).toLocaleString()}</Text>
     </View>
   );
 

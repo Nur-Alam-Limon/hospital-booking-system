@@ -16,6 +16,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function BottomTabs() {
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const handleLogout = async () => {
     await clearToken();

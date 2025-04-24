@@ -13,6 +13,7 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 - **Validation & Error Handling**
 - **Bottom Navigation** between Home & Booking
 - **Token-based Authorization** using Bearer JWT
+- **Dockerized Frontend**
 - Clean and simple UI designed for maintainability
 
 ### Backend (Node.js + Express + PostgreSQL + Prisma)
@@ -22,7 +23,7 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 - **API Endpoint to Create Booking**
 - **Authorization Middleware**
 - **Validation & Error Handling**
-- **Dockerized PostgreSQL setup**
+- **Dockerized PostgreSQL setup and also Backend**
 
 ---
 
@@ -48,7 +49,35 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
 
 ## How to Run
 
-### Backend Setup
+### Full Project with Docker (Recommended)
+
+1. Clone the repository and navigate to the root folder.
+
+2. Create `.env` file in `/backend`:
+   ```
+   DATABASE_URL=postgresql://user:password@hospital-db:5432/hospitaldb
+   JWT_SECRET=your_jwt_secret
+   PORT=5000
+   JWT_EXPIRATION=1h
+   JWT_REFRESH_EXPIRATION=10d
+   ```
+
+3. Build and start the full system:
+   ```bash
+   docker compose up --build
+   ```
+
+4. Run migrations inside the backend container:
+   ```bash
+   docker exec -it hospital-backend sh
+   npx prisma migrate dev --name init
+   ```
+
+> You can also use `npx prisma migrate reset` if you're starting fresh.
+
+---
+
+### Backend Setup (Run Without Docker)
 
 1. Navigate to the backend folder:
    ```bash
@@ -60,16 +89,16 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
    npm install
    ```
 
-3. Create `.env`:
+3. Set up `.env`:
    ```
-   DATABASE_URL=postgresql://user:password@db:5432/hospitaldb
+   DATABASE_URL=postgresql://localhost:5432/hospitaldb
    JWT_SECRET=your_jwt_secret
    PORT=5000
    JWT_EXPIRATION=1h
    JWT_REFRESH_EXPIRATION=10d
    ```
 
-4. Run migrations and seed data:
+4. Run migrations and generate Prisma client:
    ```bash
    npx prisma migrate dev --name init
    npx prisma generate
@@ -80,14 +109,9 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
    npm run dev
    ```
 
-6. Run in docker:
-   ```bash
-   docker compose up --build
-   ```
-
 ---
 
-### Frontend Setup
+### Frontend Setup (Expo App)
 
 1. Navigate to the frontend folder:
    ```bash
@@ -99,12 +123,14 @@ A cross-platform mobile app (built with Expo) with a backend API (built with Exp
    npm install
    ```
 
-3. Start the Expo app:
+3. Update the base API URL in `services/api.js` to your backend's IP (e.g., if using Docker: `http://localhost:5000` or your local network IP).
+
+4. Start the Expo app:
    ```bash
    expo start
    ```
 
-4. Make sure to update `API_BASE_URL` in `services/api.js` to point to backend.
+> Use Expo Go on your phone or an emulator to run the app.
 
 ---
 
@@ -119,11 +145,18 @@ Authenticate user and receive JWT token
 ### `POST /api/auth/refresh-token`
 Generated a refresh token for verification based on jwt
 
-### `GET /api/bookings/hospitals`
-Returns list of hospitals with their available services
+### `GET /api/bookings`
+Returns list of all bookings for that user
 
 ### `POST /api/bookings`
 Create a new booking  
+
+### `GET /api/hospitals`
+Returns list of all hospitals
+
+### `POST /api/hospitals/create`
+Create a hospital with services provided
+
 **Protected**: Requires Bearer token in `Authorization` header
 
 ---
@@ -134,6 +167,7 @@ Create a new booking
 - JWT decoding was shifted to **backend** for better security and to avoid exposing token structure on the client.
 - Used **Expo SecureStore** to safely store JWTs on device.
 - Used refresh token with jwt to make more secure
+- Backend and database run in Docker for consistent development environments.
 
 ---
 

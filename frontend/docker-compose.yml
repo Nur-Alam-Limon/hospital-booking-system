@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    container_name: hospital-frontend
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "19000:19000"   # Expo DevTools
+      - "19001:19001"   # iOS (default)
+      - "19002:19002"   # Web preview
+      - "8081:8081"     # Metro bundler default
+      - "8082:8082"     # Optional fallback
+    stdin_open: true
+    tty: true
+    command: ["npx", "expo", "start", "--tunnel", "--clear"]
